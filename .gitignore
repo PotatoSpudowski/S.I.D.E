@@ -6,6 +6,8 @@
 .pub
 
 #datafolder
+__pycache__/
+.ipynb_checkpoints/
 Data/GCC_data/**
 Data/Pascal_sencence_data/**
 Data/Train_GCC-training.tsv
