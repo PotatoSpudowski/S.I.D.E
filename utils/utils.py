@@ -20,7 +20,7 @@ def preprocess_image(image,image_size):
     return x
 
 def extract_image_feature(image, model):
-    return model.predict(image)
+    return model.predict(image)[0]
 
 def extract_image_features(images, model):
     features = []
