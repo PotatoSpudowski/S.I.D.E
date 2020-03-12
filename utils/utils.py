@@ -10,12 +10,16 @@ def verify_image(img_file):
     return True
 
 def preprocess_image(image,image_size):
-    image = imread(image)
+    image = io.imread(image)
     x = center_crop_and_resize(image, image_size=image_size)
     x = preprocess_input(x)
     x = np.expand_dims(x, 0)
 
     return x
 
-def get_image_vector_pair()
+def clean_data():
+    return 0    
+
+def get_image_vector_pair():
+    return 0
 
