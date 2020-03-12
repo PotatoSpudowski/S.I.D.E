@@ -1,9 +1,9 @@
 import sys, os
-sys.path.append(os.path.abspath(os.path.join('..', 'model')))
+sys.path.append(os.path.abspath(os.path.join('..', 'utils')))
 
 from annoy import AnnoyIndex
 from tqdm import tqdm
-from model import model
+from utils.utils import *
 
 def build_annoy_indexer(features, feature_size, no_of_trees):
     annoy_indexer = AnnoyIndex(feature_size, metric='angular')
@@ -14,7 +14,7 @@ def build_annoy_indexer(features, feature_size, no_of_trees):
     return annoy_indexer
 
 def nns_for_images(image, model, annoy_indexer, no_of_nns=5, include_distances=True):
-    feature = model.extract_image_feature(model.preprocess_image(image, model.input_shape[1]), model)
+    feature = extract_image_feature(preprocess_image(image, model.input_shape[1]), model)
     distances = annoy_indexer.get_nns_by_vector(feature, no_of_nns, include_distances=True)
 
     return distances
