@@ -1,4 +1,5 @@
 import efficientnet.tfkeras as efn
+import tensorflow_hub as hub
 from tensorflow.keras.models import Model
 
 def get_efficientnet_model(model_version):
@@ -14,7 +15,22 @@ def get_efficientnet_model(model_version):
 
 def get_efficientnet_feature_extractor(model_version):
     effnet_model = get_efficientnet_model(model_version)
-    effnet_feature_extractor = Model(inputs=effnet_model.input,
-                                    outputs=effnet_model.get_layer('top_dropout').output)
+    model = Model(inputs=effnet_model.input,
+            outputs=effnet_model.get_layer('top_dropout').output)
 
-    return effnet_feature_extractor
+    return model
+
+def get_sentence_encoder(version):
+    urls = {
+        "1": "https://tfhub.dev/google/universal-sentence-encoder/1",
+        "2": "https://tfhub.dev/google/universal-sentence-encoder/2",
+        "3": "https://tfhub.dev/google/universal-sentence-encoder/3",
+        "4": "https://tfhub.dev/google/universal-sentence-encoder/4",
+        "5": "https://tfhub.dev/google/universal-sentence-encoder-large/5"
+    }
+    model = hub.load(urls[str(version)])
+
+    return model
+
+
+
