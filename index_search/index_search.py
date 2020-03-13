@@ -5,17 +5,17 @@ from annoy import AnnoyIndex
 from tqdm import tqdm
 from utils.utils import *
 
-def build_annoy_indexer(features, feature_size, no_of_trees):
-    annoy_indexer = AnnoyIndex(feature_size, metric='angular')
+def build_annoy_index(features, feature_size, no_of_trees):
+    annoy_index = AnnoyIndex(feature_size, metric='angular')
     for index, vector in tqdm(enumerate(features)):
-        annoy_indexer.add_item(index, vector)
-    annoy_indexer.build(no_of_trees)
+        annoy_index.add_item(index, vector)
+    annoy_index.build(no_of_trees)
 
-    return annoy_indexer
+    return annoy_index
 
-def nns_for_images(image, model, annoy_indexer, no_of_nns=5, include_distances=True):
+def nns_for_images(image, model, annoy_index, no_of_nns=5, include_distances=True):
     feature = extract_image_feature(preprocess_image(image, model.input_shape[1]), model)
-    distances = annoy_indexer.get_nns_by_vector(feature, no_of_nns, include_distances=True)
+    distances = annoy_index.get_nns_by_vector(feature, no_of_nns, include_distances=True)
 
     return distances
 
