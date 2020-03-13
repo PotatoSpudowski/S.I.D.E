@@ -33,7 +33,18 @@ def generate_sentence_embedding(sentence, model):
     return model([sentence])[0]
 
 def generate_sentence_embeddings(sentences, model):
-    return model(sentences)
+    batch_size = 50000
+    if len(sentences) <= batch_size:
+        return model(sentences)
+    else:
+        embeddings = []
+        for i in tqdm(range(len(sentences)//batch_size)):
+            batch = sentences[i*batch_size:(i+1)*batch_size]
+            embeddings.extend(model(batch))
+        if len(sentences)%batch_size != 0:
+            batch = sentences[(i+1)*batch_size:]
+        
+        return embeddings 
 
 def clean_data():
     return 0    
