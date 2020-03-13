@@ -29,6 +29,12 @@ def extract_image_features(images, model):
     
     return features
 
+def generate_sentence_embedding(sentence, model):
+    return model([sentence])[0]
+
+def generate_sentence_embeddings(sentences, model):
+    return model(sentences)
+
 def clean_data():
     return 0    
 
