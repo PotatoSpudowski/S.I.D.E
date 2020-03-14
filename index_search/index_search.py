@@ -6,6 +6,8 @@ from tqdm import tqdm
 from utils.utils import *
 
 def build_annoy_index(features, feature_size, no_of_trees):
+    if type(features) != np.ndarray:
+        features = np.asarray(features)
     annoy_index = AnnoyIndex(feature_size, metric='angular')
     for index, vector in tqdm(enumerate(features)):
         annoy_index.add_item(index, vector)
