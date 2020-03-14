@@ -21,3 +21,9 @@ def nns_for_images(image, model, annoy_index, no_of_nns=5, include_distances=Tru
 
     return distances
 
+def nns_for_sentence(sentence, model, annoy_index, no_of_nns=5, include_distances=True):
+    feature = generate_sentence_embedding(sentence, model)
+    distances = annoy_index.get_nns_by_vector(feature, no_of_nns, include_distances=True)
+
+    return distances
+
