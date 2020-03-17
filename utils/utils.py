@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from skimage import io
 from tqdm import tqdm
 from tensorflow.keras.models import Model
@@ -46,9 +47,18 @@ def generate_sentence_embeddings(sentences, model):
         
         return embeddings 
 
-def clean_data():
-    return 0    
+def clean_data(df_path, ignore_df_path):
+    df = pd.read_csv(df_path)
+    ignore_df = pd.read_csv(ignore_df_path)
+    ignore_df.columns = ['index', 'images']
+    common = pd.merge(df, ignore_df, on=['images'])
+    s1 = df[(~df.images.isin(common.images))]
 
-def get_image_vector_pair():
-    return 0
+    return s1   
+
+def generate_image_embedding_pair(df, model):
+    images, captions = df["images"], df["captions"]
+    embeddings = generate_sentence_embeddings(captions, model)
+
+    return list(zip(images, embeddings))
 
