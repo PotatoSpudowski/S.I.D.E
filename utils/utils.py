@@ -59,6 +59,9 @@ def clean_data(df_path, ignore_df_path):
 def generate_image_embedding_pair(df, model):
     images, captions = df["images"], df["captions"]
     embeddings = generate_sentence_embeddings(captions, model)
+    embeddings2 = []
+    for embedding in tqdm(embeddings):
+        embeddings2.append(tf.convert_to_tensor(np.reshape(embedding, (1, 512)), np.float32))
 
-    return list(zip(images, embeddings))
+    return list(zip(images, embeddings2))
 
