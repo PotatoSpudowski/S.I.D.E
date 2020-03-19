@@ -2,12 +2,44 @@ import numpy as np
 import pandas as pd
 from skimage import io
 from tqdm import tqdm
+import tensorflow as tf
 from tensorflow.keras.models import Model
 from efficientnet.keras import center_crop_and_resize, preprocess_input
+
+class CustomGenerator(tf.compat.v2.keras.utils.Sequence):
+
+    def __init__(self, image_filenames, embeddings, batch_size, sentence_encoder_model):
+        self.image_filenames, self.embeddings = image_filenames, embeddings
+        self.batch_size = batch_size
+        self.sentence_encoder_model = sentence_encoder_model
+
+    def __len__(self):
+        return int(np.ceil(len(self.image_filenames) / float(self.batch_size)))
+
+    def __getitem__(self, idx):
+        batch_x = self.image_filenames[int(idx * self.batch_size):int((idx + 1) * self.batch_size)]
+        batch_y = self.embeddings[int(idx * self.batch_size):int((idx + 1) * self.batch_size)]
+        embeddings = self.sentence_encoder_model(batch_y)
+  
+        images = []
+        embeddings2 = []
+        for i in range(len(batch_x)):
+            try:
+                if verify_image(os.path.join("Data", batch_x[i])):
+                    image = preprocess_image(os.path.join("Data", batch_x[i]), 380)
+                    if image.shape == (1,380,380,3):
+                        images.append(image[0])
+                        embeddings2.append(embeddings[i])
+            except ValueError:
+                pass
+
+        return np.asarray(images), np.asarray(embeddings2)
 
 def verify_image(img_file):
     try:
         img = io.imread(img_file)
+        if img.shape == (0, 0) or img.shape == (1, 1):
+            return False
     except:
         return False
     return True
