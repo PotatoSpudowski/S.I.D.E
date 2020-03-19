@@ -43,7 +43,7 @@ def get_custom_model(model_version, embedding_size):
     for layer in effnet_fe.layers:
         layer.trainable = False
     features = effnet_fe.get_layer('top_dropout').output
-    feature_size = effnet_fe.get_layer('top_dropout').output.shape[1]
+    feature_size = features.shape[1]
     d1 = Dense((feature_size+embedding_size)//2, name="dense_layer")(features)
     d1 = BatchNormalization()(d1)
     d1 = Activation("relu")(d1)
@@ -53,7 +53,7 @@ def get_custom_model(model_version, embedding_size):
 
     custom_model = Model(inputs=[effnet_fe.input], outputs=output_layer)
     cosine_loss = CosineSimilarity(axis=1)
-    custom_model.compile(optimizer='SGD', loss=cosine_loss)
+    custom_model.compile(optimizer='Adam', loss=cosine_loss)
 
     return custom_model
 
