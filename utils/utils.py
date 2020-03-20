@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 from skimage import io
@@ -78,22 +79,4 @@ def generate_sentence_embeddings(sentences, model):
             batch = sentences[(i+1)*batch_size:]
         
         return embeddings 
-
-def clean_data(df_path, ignore_df_path):
-    df = pd.read_csv(df_path)
-    ignore_df = pd.read_csv(ignore_df_path)
-    ignore_df.columns = ['index', 'images']
-    common = pd.merge(df, ignore_df, on=['images'])
-    s1 = df[(~df.images.isin(common.images))]
-
-    return s1   
-
-def generate_image_embedding_pair(df, model):
-    images, captions = df["images"], df["captions"]
-    embeddings = generate_sentence_embeddings(captions, model)
-    embeddings2 = []
-    for embedding in tqdm(embeddings):
-        embeddings2.append(tf.convert_to_tensor(np.reshape(embedding, (1, 512)), np.float32))
-
-    return list(zip(images, embeddings2))
 
